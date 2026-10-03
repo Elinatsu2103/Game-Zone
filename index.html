@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match Championship - Speed Playing Cards</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.75);
+            --bg-card-hover: rgba(51, 65, 85, 0.85);
+            --accent-primary: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.35);
+            --accent-success: #22c55e;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.12);
+            --card-red: #ef4444;
+            --card-black: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.12) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1rem;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text h1 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .profile-widget {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 0.35rem 0.75rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .profile-widget:hover {
+            border-color: var(--accent-primary);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .profile-avatar-thumb {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #334155;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            overflow: hidden;
+        }
+
+        .profile-avatar-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .profile-name-text {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+            max-width: 90px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .profile-code-text {
+            font-size: 0.65rem;
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.55rem 0.95rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0284c7, #2563eb);
+            border: none;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0369a1, #1d4ed8);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        .btn-invite {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border: none;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+        }
+
+        .btn-invite:hover {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.25);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            border: none;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        .screen {
+            display: none;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .lobby-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .lobby-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .lobby-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .lobby-desc {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .opt-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.85rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .opt-card:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .opt-card.selected {
+            border-color: var(--accent-primary);
+            background: rgba(56, 189, 248, 0.12);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .opt-card .title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: block;
+            color: #fff;
+        }
+
+        .opt-card .sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+            display: block;
+        }
+
+        .highscore-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 16px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .highscore-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .highscore-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+        }
+
+        .highscore-val {
+            font-size: 2.2rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+            color: #fff;
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.85rem 1.25rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-primary);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .phase-badge.recall {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--accent-warning);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .timer-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timer-display.warning {
+            color: var(--accent-danger);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-primary), #818cf8);
+            width: 100%;
+            transition: width 0.3s linear;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+            gap: 0.6rem;
+            max-height: 520px;
+            overflow-y: auto;
+            padding: 0.5rem;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+        }
+
+        @media (min-width: 640px) {
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+                gap: 0.75rem;
+            }
+        }
+
+        .playing-card {
+            aspect-ratio: 2/3;
+            background: #ffffff;
+            border-radius: 8px;
+            color: var(--card-black);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0.4rem 0.5rem;
+            font-weight: 800;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .playing-card.red {
+            color: var(--card-red);
+        }
+
+        .playing-card .card-idx {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 0.6rem;
+            color: #64748b;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .card-top {
+            font-size: 0.85rem;
+            line-height: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .card-center-symbol {
+            font-size: 1.35rem;
+            text-align: center;
+            align-self: center;
+        }
+
+        .card-bottom {
+            font-size: 0.85rem;
+            line-height: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            transform: rotate(180deg);
+        }
+
+        /* Slide View */
+        .slide-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            gap: 1.25rem;
+        }
+
+        .large-card {
+            width: 170px;
+            height: 250px;
+            font-size: 1.4rem;
+            padding: 0.8rem 1rem;
+            border-radius: 14px;
+        }
+
+        .large-card .card-center-symbol {
+            font-size: 3.2rem;
+        }
+
+        .slide-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .recall-slots-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+            gap: 0.6rem;
+            max-height: 320px;
+            overflow-y: auto;
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.25rem;
+        }
+
+        .recall-slot {
+            aspect-ratio: 2/3;
+            background: rgba(30, 41, 59, 0.6);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .recall-slot:hover {
+            border-color: var(--accent-primary);
+            background: rgba(56, 189, 248, 0.08);
+        }
+
+        .recall-slot.active {
+            border-style: solid;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 12px var(--accent-glow);
+            background: rgba(56, 189, 248, 0.15);
+        }
+
+        .recall-slot.filled {
+            border-style: solid;
+            border-color: transparent;
+            padding: 0;
+            background: transparent;
+        }
+
+        .slot-num {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .slot-label {
+            font-size: 0.65rem;
+            color: #64748b;
+        }
+
+        /* Card Picker Panel */
+        .picker-panel {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .picker-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+        }
+
+        .picker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+            gap: 0.4rem;
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 0.4rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .picker-card-btn {
+            aspect-ratio: 2/3;
+            background: #fff;
+            color: var(--card-black);
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .picker-card-btn.red {
+            color: var(--card-red);
+        }
+
+        .picker-card-btn:hover:not(:disabled) {
+            transform: scale(1.08);
+            z-index: 2;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .picker-card-btn:disabled {
+            opacity: 0.25;
+            filter: grayscale(80%);
+            cursor: not-allowed;
+            border-color: transparent;
+            background: #94a3b8;
+        }
+
+        .picker-card-btn:disabled::after {
+            content: "✓";
+            position: absolute;
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: 900;
+        }
+
+        .podium-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: stretch;
+            gap: 0.85rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .podium-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.25rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 150px;
+            max-width: 220px;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .podium-card.rank-1 {
+            border-color: #f59e0b;
+            background: linear-gradient(180deg, rgba(245, 158, 11, 0.15), rgba(15, 23, 42, 0.9));
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+        }
+
+        .podium-card.rank-2 {
+            border-color: #94a3b8;
+            background: linear-gradient(180deg, rgba(148, 163, 184, 0.15), rgba(15, 23, 42, 0.9));
+        }
+
+        .podium-card.rank-3 {
+            border-color: #b45309;
+            background: linear-gradient(180deg, rgba(180, 83, 9, 0.15), rgba(15, 23, 42, 0.9));
+        }
+
+        .podium-card.is-user {
+            border-width: 2px;
+            border-color: var(--accent-primary);
+        }
+
+        .podium-rank-badge {
+            position: absolute;
+            top: -12px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .rank-1 .podium-rank-badge { background: #f59e0b; color: #000; border: none; }
+        .rank-2 .podium-rank-badge { background: #94a3b8; color: #000; border: none; }
+        .rank-3 .podium-rank-badge { background: #b45309; color: #fff; border: none; }
+
+        .podium-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--bg-card-hover);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-top: 6px;
+            margin-bottom: 8px;
+            border: 2px solid rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+
+        .podium-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .podium-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .podium-score-box {
+            background: rgba(0,0,0,0.35);
+            border-radius: 10px;
+            padding: 0.65rem 0.8rem;
+            width: 100%;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .podium-score-num {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #38bdf8;
+            line-height: 1.1;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .podium-score-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 3px;
+            font-weight: 600;
+        }
+
+        /* Review Table */
+        .review-table-container {
+            max-height: 320px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-top: 1.25rem;
+        }
+
+        table.review-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        table.review-table th, table.review-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table.review-table th {
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .match-tag {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .match-tag.correct { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+        .match-tag.wrong { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            padding: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        /* Profile Modal Elements */
+        .avatar-edit-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .large-avatar-preview {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #334155;
+            border: 3px solid var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            overflow: hidden;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+
+        .large-avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .code-box {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px dashed var(--accent-primary);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.25rem;
+        }
+
+        .code-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- HEADER -->
+        <header>
+            <div class="logo-group">
+                <span class="logo-icon">🂡</span>
+                <div class="logo-text">
+                    <h1>Speed Memory Match</h1>
+                    <p>Playing Cards Championship</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <!-- PLAYER PROFILE WIDGET -->
+                <div class="profile-widget" onclick="openModal('modal-profile')">
+                    <div class="profile-avatar-thumb" id="hdr-avatar-thumb">👤</div>
+                    <div class="profile-info">
+                        <span class="profile-name-text" id="hdr-username">Player</span>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="openModal('modal-instructions')">📖 Cara Bermain</button>
+                <button class="btn btn-danger" id="btn-restart" onclick="confirmRestart()" style="display:none;">🔄 Reset Game</button>
+            </div>
+        </header>
+
+        <!-- LOBBY SCREEN -->
+        <main id="screen-lobby" class="screen active">
+            <div class="lobby-grid">
+                <div>
+                    <h2 class="lobby-title">Pengaturan Pertandingan</h2>
+                    <p class="lobby-desc">Atur jumlah kartu, durasi hafalan, serta jumlah lawan AI kompetitif sebelum memulai turnamen.</p>
+
+                    <div class="form-group">
+                        <label class="form-label">1. Jumlah Kartu (Deck Size)</label>
+                        <div class="options-grid" id="opt-cards">
+                            <div class="opt-card" data-val="10" onclick="selectOption('totalCards', 10, this)">
+                                <span class="title">10 Kartu</span>
+                                <span class="sub">Pemula / Kilat</span>
+                            </div>
+                            <div class="opt-card" data-val="26" onclick="selectOption('totalCards', 26, this)">
+                                <span class="title">26 Kartu</span>
+                                <span class="sub">Setengah Deck</span>
+                            </div>
+                            <div class="opt-card selected" data-val="52" onclick="selectOption('totalCards', 52, this)">
+                                <span class="title">52 Kartu</span>
+                                <span class="sub">1 Deck Penuh</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">2. Waktu Hafalan (Memorization Time)</label>
+                        <div class="options-grid" id="opt-time">
+                            <div class="opt-card" data-val="60" onclick="selectOption('memorizeTime', 60, this)">
+                                <span class="title">1 Menit</span>
+                                <span class="sub">Tantangan Cepat</span>
+                            </div>
+                            <div class="opt-card selected" data-val="180" onclick="selectOption('memorizeTime', 180, this)">
+                                <span class="title">3 Menit</span>
+                                <span class="sub">Standar Resmi</span>
+                            </div>
+                            <div class="opt-card" data-val="300" onclick="selectOption('memorizeTime', 300, this)">
+                                <span class="title">5 Menit</span>
+                                <span class="sub">Mode Santai</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">3. Jumlah Lawan (AI Competitors)</label>
+                        <div class="options-grid" id="opt-opponents">
+                            <div class="opt-card" data-val="1" onclick="selectOption('opponentsCount', 1, this)">
+                                <span class="title">1 Lawan</span>
+                                <span class="sub">Total 2 Player</span>
+                            </div>
+                            <div class="opt-card selected" data-val="2" onclick="selectOption('opponentsCount', 2, this)">
+                                <span class="title">2 Lawan</span>
+                                <span class="sub">Total 3 Player</span>
+                            </div>
+                            <div class="opt-card" data-val="3" onclick="selectOption('opponentsCount', 3, this)">
+                                <span class="title">3 Lawan</span>
+                                <span class="sub">Total 4 Player</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%; padding: 1rem; justify-content: center; font-size: 1.1rem; margin-top: 1rem;" onclick="startGame()">
+                        🚀 Mulai Kejuaraan Memori
+                    </button>
+                </div>
+
+                <!-- HIGHSCORE & STATS -->
+                <div>
+                    <div class="highscore-card">
+                        <div class="highscore-header">
+                            <span class="highscore-title">🏆 Rekor Terbaik</span>
+                            <span>👑</span>
+                        </div>
+                        <div id="hs-score" class="highscore-val">0 / 52</div>
+                        <p id="hs-details" style="font-size:0.8rem; color:var(--text-muted);">Akurasi: 0% • -</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- MEMORIZE SCREEN -->
+        <section id="screen-memorize" class="screen">
+            <div class="status-bar">
+                <div class="phase-badge">🧠 Sesi Menghafal</div>
+                <div class="timer-display" id="memorize-timer-text">⏱️ 03:00</div>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="memorize-progress"></div>
+            </div>
+
+            <div class="view-controls" style="margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <div style="font-size:0.9rem; font-weight:700;" id="mem-card-count-label">Kartu Teracak (52 Kartu)</div>
+                <div style="display:flex; gap:0.5rem;">
+                    <button class="btn" id="btn-view-grid" onclick="setMemorizeView('grid')">📱 Grid View</button>
+                    <button class="btn" id="btn-view-slide" onclick="setMemorizeView('slide')">🔍 Slide View</button>
+                </div>
+            </div>
+
+            <!-- GRID VIEW CONTAINER -->
+            <div id="memorize-grid-container" class="cards-grid"></div>
+
+            <!-- SLIDE VIEW CONTAINER -->
+            <div id="memorize-slide-container" class="slide-container" style="display:none;">
+                <div class="playing-card large-card" id="slide-card-display">
+                    <span class="card-idx" id="slide-card-idx">#1</span>
+                    <div class="card-top">
+                        <span id="slide-rank-top">A</span>
+                        <span id="slide-suit-top">♥</span>
+                    </div>
+                    <div class="card-center-symbol" id="slide-suit-center">♥</div>
+                    <div class="card-bottom">
+                        <span id="slide-rank-bot">A</span>
+                        <span id="slide-suit-bot">♥</span>
+                    </div>
+                </div>
+                <div class="slide-nav">
+                    <button class="btn" onclick="navSlide(-1)">◀ Sebelumnya</button>
+                    <span id="slide-counter-text" style="font-family:'JetBrains Mono'; font-weight:700;">1 / 52</span>
+                    <button class="btn" onclick="navSlide(1)">Selanjutnya ▶</button>
+                </div>
+            </div>
+
+            <button class="btn btn-success" style="width: 100%; margin-top: 1.25rem; justify-content: center; padding: 0.9rem;" onclick="finishMemorizeEarly()">
+                ✅ Selesai Menghafal (Lanjut ke Recall)
+            </button>
+        </section>
+
+        <!-- RECALL SCREEN -->
+        <section id="screen-recall" class="screen">
+            <div class="status-bar">
+                <div class="phase-badge recall">📝 Sesi Mengingat (Recall)</div>
+                <div class="timer-display" id="recall-timer-text">⏱️ 05:00</div>
+            </div>
+
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom: 0.75rem;">
+                Klik slot di bawah ini, lalu pilih kartu dari panel kartu di bawah. <b>Catatan: Setiap kartu hanya bisa dimasukkan di satu slot!</b>
+            </p>
+
+            <!-- RECALL SLOTS GRID -->
+            <div class="recall-slots-container" id="recall-slots-grid"></div>
+
+            <!-- CARD PICKER PANEL -->
+            <div class="picker-panel">
+                <div class="picker-header">
+                    <span class="picker-title" id="picker-active-slot-title">Pilih Kartu Untuk Slot #1</span>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button class="btn btn-danger" style="padding:0.35rem 0.75rem; font-size:0.8rem;" onclick="clearActiveSlot()">❌ Hapus</button>
+                        <button class="btn" style="padding:0.35rem 0.75rem; font-size:0.8rem;" onclick="navSlot(-1)">◀ Prev</button>
+                        <button class="btn" style="padding:0.35rem 0.75rem; font-size:0.8rem;" onclick="navSlot(1)">Next ▶</button>
+                    </div>
+                </div>
+
+                <div class="picker-grid" id="picker-cards-grid"></div>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1.25rem; justify-content: center; padding: 0.9rem;" onclick="submitRecallAnswers()">
+                🏆 Kirim Jawaban Akhir
+            </button>
+        </section>
+
+        <!-- RESULTS SCREEN -->
+        <section id="screen-results" class="screen">
+            <h2 style="text-align: center; font-size: 1.6rem; margin-bottom: 0.25rem;">Hasil Pertandingan</h2>
+            <p id="winner-title" style="text-align: center; color: var(--accent-primary); font-weight: 700; margin-bottom: 1.25rem;"></p>
+
+            <!-- PODIUM DISPLAY -->
+            <div class="podium-container" id="podium-display"></div>
+
+            <h3 style="font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight:700;">Ulasan Jawaban Kartu (Slot-by-Slot)</h3>
+            <div class="review-table-container">
+                <table class="review-table">
+                    <thead>
+                        <tr>
+                            <th>Posisi</th>
+                            <th>Kartu Asli</th>
+                            <th>Jawaban Anda</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="review-table-body"></tbody>
+                </table>
+            </div>
+
+            <div style="display:flex; gap:1rem; margin-top: 1.5rem;">
+                <button class="btn btn-primary" style="flex:1; justify-content:center; padding:0.85rem;" onclick="startGame()">🔄 Main Lagi</button>
+                <button class="btn" style="flex:1; justify-content:center; padding:0.85rem;" onclick="showLobby()">🏠 Kembali ke Lobby</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- MODAL PROFILE PLAYER -->
+    <div class="modal-overlay" id="modal-profile">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">👤 Profil Pemain Anda</h3>
+                <button class="close-btn" onclick="closeModal('modal-profile')">&times;</button>
+            </div>
+
+            <div class="avatar-edit-container">
+                <div class="large-avatar-preview" id="profile-avatar-large">👤</div>
+                <label for="avatar-file-input" class="btn btn-primary" style="padding:0.4rem 0.9rem; font-size:0.8rem; cursor:pointer;">
+                    📷 Pilih Foto dari Galeri / File
+                </label>
+                <input type="file" id="avatar-file-input" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Nama Username Pemain</label>
+                <input type="text" class="form-input" id="profile-username-input" placeholder="Masukkan Username Anda" maxlength="15">
+            </div>
+
+            <button class="btn btn-success" style="width: 100%; justify-content: center; padding: 0.85rem;" onclick="savePlayerProfile()">
+                💾 Simpan Profil
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL INSTRUCTIONS -->
+    <div class="modal-overlay" id="modal-instructions">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">📖 Cara Bermain</h3>
+                <button class="close-btn" onclick="closeModal('modal-instructions')">&times;</button>
+            </div>
+            <ul class="instruction-list" style="list-style:none; display:flex; flex-direction:column; gap:0.75rem; font-size:0.9rem; color:#cbd5e1; margin-bottom:1.5rem;">
+                <li style="display:flex; gap:0.75rem; align-items:flex-start;">
+                    <span style="background:var(--accent-primary); color:#000; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem; flex-shrink:0; margin-top:2px;">1</span>
+                    <div><b>Fase Hafalan:</b> Anda diberikan waktu untuk menghafal kartu acak (10, 26, atau 52 kartu). Anda bisa menggunakan Tampilan Grid atau Tampilan Slide.</div>
+                </li>
+                <li style="display:flex; gap:0.75rem; align-items:flex-start;">
+                    <span style="background:var(--accent-primary); color:#000; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem; flex-shrink:0; margin-top:2px;">2</span>
+                    <div><b>Fase Mengingat (Recall):</b> Susun kembali urutan kartu secara presisi. Setiap kartu hanya bisa ditempatkan pada 1 slot. Semua slot wajib terisi sebelum disubmit.</div>
+                </li>
+                <li style="display:flex; gap:0.75rem; align-items:flex-start;">
+                    <span style="background:var(--accent-primary); color:#000; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.75rem; flex-shrink:0; margin-top:2px;">3</span>
+                    <div><b>Penilaian & Multiplayer:</b> Pemenang ditentukan dari siapa yang berhasil menebak urutan kartu dengan benar terbanyak.</div>
+                </li>
+            </ul>
+            <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="closeModal('modal-instructions')">Saya Mengerti</button>
+        </div>
+    </div>
+
+    <!-- MODAL ALERT CUSTOM -->
+    <div class="modal-overlay" id="modal-alert">
+        <div class="modal-card" style="text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">⚠️</div>
+            <h3 class="modal-title" id="alert-title" style="margin-bottom: 0.5rem;">Peringatan</h3>
+            <p id="alert-msg" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;"></p>
+            <button class="btn btn-primary" style="width: 100%; justify-content: center;" onclick="closeModal('modal-alert')">Tutup</button>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIRM CUSTOM -->
+    <div class="modal-overlay" id="modal-confirm">
+        <div class="modal-card" style="text-align: center;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">❓</div>
+            <h3 class="modal-title" id="confirm-title" style="margin-bottom: 0.5rem;">Konfirmasi</h3>
+            <p id="confirm-msg" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;"></p>
+            <div style="display: flex; gap: 0.75rem;">
+                <button class="btn" style="flex:1; justify-content: center;" onclick="closeModal('modal-confirm')">Batal</button>
+                <button class="btn btn-danger" style="flex:1; justify-content: center;" id="confirm-ok-btn">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'speed-memory-match';
+        let db = null;
+        let auth = null;
+
+        try {
+            if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+                const firebaseConfig = JSON.parse(__firebase_config);
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                const initAuth = async () => {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                };
+                initAuth().catch(err => console.log("Firebase auth info:", err));
+            }
+        } catch (e) {
+            console.log("Standalone mode running without external backend:", e);
+        }
+
+        window.db = db;
+        window.appId = appId;
+    </script>
+
+    <script>
+        const SUITS = [
+            { symbol: '♥', color: 'red', id: 'H' },
+            { symbol: '♦', color: 'red', id: 'D' },
+            { symbol: '♠', color: 'black', id: 'S' },
+            { symbol: '♣', color: 'black', id: 'C' }
+        ];
+        const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+        let audioCtx = null;
+        function playSound(type) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                } else if (type === 'place') {
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.08);
+                } else if (type === 'warn') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.2);
+                } else if (type === 'win') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                }
+            } catch (e) {}
+        }
+
+        // Player Profile State
+        let playerProfile = {
+            username: 'Pemain',
+            avatar: ''
+        };
+
+        let gameConfig = {
+            totalCards: 52,
+            memorizeTime: 180,
+            opponentsCount: 2
+        };
+
+        let currentDeck = [];
+        let allMasterCards = [];
+        let userAnswers = [];
+        let activeRecallIndex = 0;
+        let slideIndex = 0;
+        let memorizeView = 'grid';
+
+        let memorizeTimer = null;
+        let recallTimer = null;
+        let memorizeTimeLeft = 0;
+        let recallTimeLeft = 0;
+
+        window.onload = function() {
+            initPlayerProfile();
+            generateMasterDeck();
+            loadHighScore();
+        };
+
+        function initPlayerProfile() {
+            try {
+                let saved = localStorage.getItem('mm_player_profile');
+                if (saved) {
+                    playerProfile = JSON.parse(saved);
+                } else {
+                    playerProfile.username = 'Pemain_' + Math.floor(100 + Math.random() * 900);
+                    playerProfile.avatar = '';
+                    saveProfileToStorage();
+                }
+            } catch(e) {
+                playerProfile.username = 'Pemain_1';
+            }
+            updateProfileUI();
+        }
+
+        function saveProfileToStorage() {
+            try {
+                localStorage.setItem('mm_player_profile', JSON.stringify(playerProfile));
+            } catch(e) {}
+        }
+
+        function updateProfileUI() {
+            document.getElementById('hdr-username').innerText = playerProfile.username;
+            
+            const thumbEl = document.getElementById('hdr-avatar-thumb');
+            const largePreviewEl = document.getElementById('profile-avatar-large');
+
+            if (playerProfile.avatar) {
+                thumbEl.innerHTML = `<img src="${playerProfile.avatar}" alt="Avatar">`;
+                largePreviewEl.innerHTML = `<img src="${playerProfile.avatar}" alt="Avatar">`;
+            } else {
+                thumbEl.innerText = '👤';
+                largePreviewEl.innerText = '👤';
+            }
+
+            document.getElementById('profile-username-input').value = playerProfile.username;
+        }
+
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    showAlert("Ukuran Berkas Terlalu Besar", "Harap pilih foto dengan ukuran di bawah 2MB.");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    playerProfile.avatar = e.target.result;
+                    document.getElementById('profile-avatar-large').innerHTML = `<img src="${playerProfile.avatar}" alt="Avatar">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function savePlayerProfile() {
+            playSound('click');
+            const newName = document.getElementById('profile-username-input').value.trim();
+            if (newName.length > 0) {
+                playerProfile.username = newName;
+            }
+            saveProfileToStorage();
+            updateProfileUI();
+            closeModal('modal-profile');
+        }
+
+        function generateMasterDeck() {
+            allMasterCards = [];
+            SUITS.forEach(s => {
+                RANKS.forEach(r => {
+                    allMasterCards.push({
+                        id: r + s.id,
+                        rank: r,
+                        suit: s.symbol,
+                        color: s.color,
+                        name: r + s.symbol
+                    });
+                });
+            });
+        }
+
+        function selectOption(key, val, element) {
+            playSound('click');
+            gameConfig[key] = val;
+            const parent = element.parentElement;
+            parent.querySelectorAll('.opt-card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function showAlert(title, message) {
+            playSound('warn');
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-msg').innerText = message;
+            openModal('modal-alert');
+        }
+
+        function showCustomConfirm(title, message, onConfirm) {
+            playSound('warn');
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-msg').innerText = message;
+            const okBtn = document.getElementById('confirm-ok-btn');
+            okBtn.onclick = function() {
+                closeModal('modal-confirm');
+                onConfirm();
+            };
+            openModal('modal-confirm');
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            
+            const btnRestart = document.getElementById('btn-restart');
+            if (screenId === 'screen-lobby') {
+                btnRestart.style.display = 'none';
+            } else {
+                btnRestart.style.display = 'inline-flex';
+            }
+        }
+
+        function showLobby() {
+            clearInterval(memorizeTimer);
+            clearInterval(recallTimer);
+            showScreen('screen-lobby');
+            loadHighScore();
+        }
+
+        function confirmRestart() {
+            showCustomConfirm(
+                "Mulai Ulang Game", 
+                "Apakah Anda yakin ingin mengulang permainan dari awal? Progress saat ini akan hilang.",
+                function() {
+                    showLobby();
+                }
+            );
+        }
+
+        function startGame() {
+            playSound('click');
+            
+            // Create shuffled deck based on totalCards config
+            const deckCopy = [...allMasterCards];
+            deckCopy.sort(() => Math.random() - 0.5);
+            currentDeck = deckCopy.slice(0, gameConfig.totalCards);
+
+            userAnswers = new Array(gameConfig.totalCards).fill(null);
+            activeRecallIndex = 0;
+            slideIndex = 0;
+
+            document.getElementById('mem-card-count-label').innerText = `Kartu Teracak (${gameConfig.totalCards} Kartu)`;
+
+            renderMemorizeGrid();
+            renderSlideCard();
+            startMemorizePhase();
+        }
+
+        function startMemorizePhase() {
+            showScreen('screen-memorize');
+            setMemorizeView('grid');
+
+            memorizeTimeLeft = gameConfig.memorizeTime;
+            updateMemorizeTimerUI();
+
+            const totalSec = gameConfig.memorizeTime;
+            memorizeTimer = setInterval(() => {
+                memorizeTimeLeft--;
+                updateMemorizeTimerUI();
+
+                const pct = (memorizeTimeLeft / totalSec) * 100;
+                document.getElementById('memorize-progress').style.width = `${pct}%`;
+
+                if (memorizeTimeLeft <= 0) {
+                    clearInterval(memorizeTimer);
+                    startRecallPhase();
+                }
+            }, 1000);
+        }
+
+        function updateMemorizeTimerUI() {
+            const m = Math.floor(memorizeTimeLeft / 60).toString().padStart(2, '0');
+            const s = (memorizeTimeLeft % 60).toString().padStart(2, '0');
+            const timerEl = document.getElementById('memorize-timer-text');
+            timerEl.innerText = `⏱️ ${m}:${s}`;
+            if (memorizeTimeLeft <= 10) {
+                timerEl.classList.add('warning');
+            } else {
+                timerEl.classList.remove('warning');
+            }
+        }
+
+        function setMemorizeView(mode) {
+            playSound('click');
+            memorizeView = mode;
+            const gridContainer = document.getElementById('memorize-grid-container');
+            const slideContainer = document.getElementById('memorize-slide-container');
+            
+            if (mode === 'grid') {
+                gridContainer.style.display = 'grid';
+                slideContainer.style.display = 'none';
+                document.getElementById('btn-view-grid').classList.add('btn-primary');
+                document.getElementById('btn-view-slide').classList.remove('btn-primary');
+            } else {
+                gridContainer.style.display = 'none';
+                slideContainer.style.display = 'flex';
+                document.getElementById('btn-view-grid').classList.remove('btn-primary');
+                document.getElementById('btn-view-slide').classList.add('btn-primary');
+                renderSlideCard();
+            }
+        }
+
+        function createCardDOM(card, numberIndex) {
+            const cardEl = document.createElement('div');
+            cardEl.className = `playing-card ${card.color}`;
+            cardEl.innerHTML = `
+                ${numberIndex ? `<span class="card-idx">#${numberIndex}</span>` : ''}
+                <div class="card-top">
+                    <span>${card.rank}</span>
+                    <span>${card.suit}</span>
+                </div>
+                <div class="card-center-symbol">${card.suit}</div>
+                <div class="card-bottom">
+                    <span>${card.rank}</span>
+                    <span>${card.suit}</span>
+                </div>
+            `;
+            return cardEl;
+        }
+
+        function renderMemorizeGrid() {
+            const grid = document.getElementById('memorize-grid-container');
+            grid.innerHTML = '';
+            currentDeck.forEach((card, idx) => {
+                const cardEl = createCardDOM(card, idx + 1);
+                grid.appendChild(cardEl);
+            });
+        }
+
+        function renderSlideCard() {
+            const card = currentDeck[slideIndex];
+            const slideEl = document.getElementById('slide-card-display');
+            
+            slideEl.className = `playing-card large-card ${card.color}`;
+            document.getElementById('slide-card-idx').innerText = `#${slideIndex + 1}`;
+            document.getElementById('slide-rank-top').innerText = card.rank;
+            document.getElementById('slide-suit-top').innerText = card.suit;
+            document.getElementById('slide-suit-center').innerText = card.suit;
+            document.getElementById('slide-rank-bot').innerText = card.rank;
+            document.getElementById('slide-suit-bot').innerText = card.suit;
+
+            document.getElementById('slide-counter-text').innerText = `${slideIndex + 1} / ${gameConfig.totalCards}`;
+        }
+
+        function navSlide(dir) {
+            playSound('click');
+            slideIndex += dir;
+            if (slideIndex < 0) slideIndex = gameConfig.totalCards - 1;
+            if (slideIndex >= gameConfig.totalCards) slideIndex = 0;
+            renderSlideCard();
+        }
+
+        function finishMemorizeEarly() {
+            clearInterval(memorizeTimer);
+            startRecallPhase();
+        }
+
+        function startRecallPhase() {
+            playSound('click');
+            showScreen('screen-recall');
+
+            renderRecallSlots();
+            renderPickerCards();
+            setActiveRecallSlot(0);
+
+            // Recall Timer
+            recallTimeLeft = Math.max(180, gameConfig.totalCards * 6);
+            updateRecallTimerUI();
+
+            recallTimer = setInterval(() => {
+                recallTimeLeft--;
+                updateRecallTimerUI();
+                if (recallTimeLeft <= 0) {
+                    clearInterval(recallTimer);
+                    submitRecallAnswers(true);
+                }
+            }, 1000);
+        }
+
+        function updateRecallTimerUI() {
+            const m = Math.floor(recallTimeLeft / 60).toString().padStart(2, '0');
+            const s = (recallTimeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('recall-timer-text').innerText = `⏱️ ${m}:${s}`;
+        }
+
+        function renderRecallSlots() {
+            const container = document.getElementById('recall-slots-grid');
+            container.innerHTML = '';
+
+            for (let i = 0; i < gameConfig.totalCards; i++) {
+                const slot = document.createElement('div');
+                slot.id = `recall-slot-${i}`;
+                slot.onclick = () => setActiveRecallSlot(i);
+
+                if (userAnswers[i]) {
+                    slot.className = 'recall-slot filled';
+                    const cardData = currentDeck.find(c => c.id === userAnswers[i]);
+                    const cardDOM = createCardDOM(cardData, i + 1);
+                    slot.appendChild(cardDOM);
+                } else {
+                    slot.className = 'recall-slot';
+                    slot.innerHTML = `
+                        <span class="slot-num">#${i + 1}</span>
+                        <span class="slot-label">Kosong</span>
+                    `;
+                }
+
+                container.appendChild(slot);
+            }
+        }
+
+        function setActiveRecallSlot(idx) {
+            playSound('click');
+            activeRecallIndex = idx;
+            
+            document.querySelectorAll('.recall-slot').forEach((s, i) => {
+                if (i === idx) s.classList.add('active');
+                else s.classList.remove('active');
+            });
+
+            document.getElementById('picker-active-slot-title').innerText = `Pilih Kartu Untuk Slot #${idx + 1}`;
+            renderPickerCards();
+        }
+
+        function navSlot(dir) {
+            let nextIdx = activeRecallIndex + dir;
+            if (nextIdx < 0) nextIdx = gameConfig.totalCards - 1;
+            if (nextIdx >= gameConfig.totalCards) nextIdx = 0;
+            setActiveRecallSlot(nextIdx);
+        }
+
+        function renderPickerCards() {
+            const grid = document.getElementById('picker-cards-grid');
+            grid.innerHTML = '';
+
+            // Map of placed cards
+            const usedCardIds = new Map();
+            userAnswers.forEach((ans, slotIdx) => {
+                if (ans !== null) {
+                    usedCardIds.set(ans, slotIdx);
+                }
+            });
+
+            // STRICT SORTING ORDER: Heart (H) -> Diamond (D) -> Spade (S) -> Club (C), then A -> K
+            const suitOrder = { 'H': 1, 'D': 2, 'S': 3, 'C': 4 };
+            const sortedDeck = [...currentDeck].sort((a, b) => {
+                const suitA = a.id.slice(-1);
+                const suitB = b.id.slice(-1);
+                if (suitOrder[suitA] !== suitOrder[suitB]) {
+                    return suitOrder[suitA] - suitOrder[suitB];
+                }
+                return RANKS.indexOf(a.rank) - RANKS.indexOf(b.rank);
+            });
+
+            sortedDeck.forEach(card => {
+                const btn = document.createElement('button');
+                btn.className = `picker-card-btn ${card.color}`;
+                btn.innerHTML = `${card.rank}<br>${card.suit}`;
+
+                const placedAtSlot = usedCardIds.get(card.id);
+                const isUsedInOtherSlot = placedAtSlot !== undefined && placedAtSlot !== activeRecallIndex;
+
+                if (isUsedInOtherSlot) {
+                    btn.disabled = true;
+                    btn.title = `Sudah dipakai di Slot #${placedAtSlot + 1}`;
+                } else {
+                    btn.onclick = () => pickCardForActiveSlot(card.id);
+                }
+
+                grid.appendChild(btn);
+            });
+        }
+
+        function pickCardForActiveSlot(cardId) {
+            playSound('place');
+            userAnswers[activeRecallIndex] = cardId;
+            renderRecallSlots();
+
+            // Auto-advance to next empty slot
+            let foundNext = false;
+            for (let i = activeRecallIndex + 1; i < gameConfig.totalCards; i++) {
+                if (!userAnswers[i]) {
+                    setActiveRecallSlot(i);
+                    foundNext = true;
+                    break;
+                }
+            }
+
+            if (!foundNext) {
+                for (let i = 0; i < activeRecallIndex; i++) {
+                    if (!userAnswers[i]) {
+                        setActiveRecallSlot(i);
+                        foundNext = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!foundNext) {
+                renderPickerCards();
+            }
+        }
+
+        function clearActiveSlot() {
+            playSound('click');
+            userAnswers[activeRecallIndex] = null;
+            renderRecallSlots();
+            renderPickerCards();
+        }
+
+        function submitRecallAnswers(forceTimeOut = false) {
+            if (!forceTimeOut) {
+                const emptyCount = userAnswers.filter(a => a === null).length;
+                if (emptyCount > 0) {
+                    showAlert("Slot Belum Lengkap", `Masih terdapat ${emptyCount} slot kartu yang belum terisi! Silakan lengkapi semua slot terlebih dahulu.`);
+                    return;
+                }
+            }
+
+            clearInterval(recallTimer);
+            playSound('win');
+
+            // Calculate User Correct Count
+            let userCorrect = 0;
+            userAnswers.forEach((ans, i) => {
+                if (ans && ans === currentDeck[i].id) {
+                    userCorrect++;
+                }
+            });
+
+            const participants = [];
+            
+            // Add Main Player with Profile Avatar & Name
+            participants.push({
+                name: `${playerProfile.username} (Anda)`,
+                isUser: true,
+                score: userCorrect,
+                avatar: playerProfile.avatar ? `<img src="${playerProfile.avatar}">` : '👑'
+            });
+
+            // AI Competitors
+            const aiNames = ['AI Master Alex', 'AI Champion Maya', 'AI Genius Ken'];
+            const aiAvatars = ['🤖', '⚡', '🧠'];
+            
+            for (let i = 0; i < gameConfig.opponentsCount; i++) {
+                const aiScore = generateAIScore();
+                participants.push({
+                    name: aiNames[i],
+                    isUser: false,
+                    score: aiScore,
+                    avatar: aiAvatars[i]
+                });
+            }
+
+            // Sort participants by score descending
+            participants.sort((a, b) => b.score - a.score);
+
+            saveHighScore(userCorrect);
+            showResults(participants, userCorrect);
+        }
+
+        function generateAIScore() {
+            const ratio = 0.55 + (Math.random() * 0.40);
+            return Math.min(gameConfig.totalCards, Math.floor(gameConfig.totalCards * ratio));
+        }
+
+        function showResults(participants, userCorrect) {
+            showScreen('screen-results');
+
+            const winner = participants[0];
+            const winnerTitle = document.getElementById('winner-title');
+            if (winner.isUser) {
+                winnerTitle.innerHTML = '🎉 Selamat! Anda Menjadi Juara Kejuaraan Memori! 🎉';
+            } else {
+                winnerTitle.innerHTML = `🏆 Juara 1 Diraih Oleh ${winner.name}`;
+            }
+
+            // Render Side-by-Side Podium
+            const podiumDisplay = document.getElementById('podium-display');
+            podiumDisplay.innerHTML = '';
+
+            participants.forEach((p, idx) => {
+                const rank = idx + 1;
+                const pCard = document.createElement('div');
+                pCard.className = `podium-card rank-${rank} ${p.isUser ? 'is-user' : ''}`;
+                
+                const pct = Math.round((p.score / gameConfig.totalCards) * 100);
+
+                pCard.innerHTML = `
+                    <div class="podium-rank-badge">Juara ${rank}</div>
+                    <div class="podium-avatar">${p.avatar}</div>
+                    <div class="podium-name">${p.name}</div>
+                    <div class="podium-score-box">
+                        <div class="podium-score-num">${p.score} / ${gameConfig.totalCards}</div>
+                        <div class="podium-score-label">${pct}% Benar</div>
+                    </div>
+                `;
+                podiumDisplay.appendChild(pCard);
+            });
+
+            // Render Detailed Review Table
+            const tbody = document.getElementById('review-table-body');
+            tbody.innerHTML = '';
+
+            currentDeck.forEach((origCard, idx) => {
+                const userAnsId = userAnswers[idx];
+                const userCard = allMasterCards.find(c => c.id === userAnsId);
+                const isCorrect = userAnsId === origCard.id;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><b>Slot #${idx + 1}</b></td>
+                    <td><span style="color:${origCard.color === 'red' ? '#ef4444' : '#f8fafc'}; font-weight:800;">${origCard.rank} ${origCard.suit}</span></td>
+                    <td>${userCard ? `<span style="color:${userCard.color === 'red' ? '#ef4444' : '#f8fafc'}; font-weight:800;">${userCard.rank} ${userCard.suit}</span>` : '<i style="color:#64748b">Kosong</i>'}</td>
+                    <td>
+                        <span class="match-tag ${isCorrect ? 'correct' : 'wrong'}">
+                            ${isCorrect ? '✓ Tepat' : '✗ Salah'}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function loadHighScore() {
+            try {
+                const hs = JSON.parse(localStorage.getItem('memory_match_highscore'));
+                if (hs) {
+                    document.getElementById('hs-score').innerText = `${hs.score} / ${hs.total}`;
+                    document.getElementById('hs-details').innerText = `Akurasi: ${hs.accuracy}% • ${hs.date}`;
+                }
+            } catch (e) {}
+        }
+
+        function saveHighScore(currentScore) {
+            try {
+                const prevHs = JSON.parse(localStorage.getItem('memory_match_highscore')) || { score: -1 };
+                if (currentScore > prevHs.score) {
+                    const accuracy = Math.round((currentScore / gameConfig.totalCards) * 100);
+                    const now = new Date();
+                    const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+                    
+                    const newHs = {
+                        score: currentScore,
+                        total: gameConfig.totalCards,
+                        accuracy: accuracy,
+                        date: dateStr
+                    };
+                    localStorage.setItem('memory_match_highscore', JSON.stringify(newHs));
+                    loadHighScore();
+                }
+            } catch (e) {}
+        }
+    </script>
+</body>
+</html>
